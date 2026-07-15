@@ -3,11 +3,11 @@ import { formatDate } from "@/lib/format";
 import type { Story } from "@/lib/wordpress/types";
 import { StoryImage } from "./story-image";
 
-export function StoryCard({ story }: { story: Story }) {
+export function StoryCard({ story, priority = false }: { story: Story; priority?: boolean }) {
   return (
     <article>
       <Link href={story.href} className="story-link group block">
-        <StoryImage image={story.image} alt={story.title} sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw" className="aspect-video rounded-card" />
+        <StoryImage image={story.image} alt={story.title} priority={priority} sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw" className="aspect-video rounded-card" />
         <div className="pt-4">
           <p className="text-[0.68rem] font-black uppercase tracking-[0.1em] text-brand">
             {story.primaryCategory?.name ?? "Notícia"}

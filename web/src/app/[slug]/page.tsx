@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArticleBody } from "@/components/editorial/article-body";
+import { ArticleBody, ArticleToc } from "@/components/editorial/article-body";
+import { StoryCard } from "@/components/editorial/story-card";
+import { prepareArticleContent } from "@/lib/content/sanitize";
 import { formatDate } from "@/lib/format";
 import { getStories, getStoryBySlug } from "@/lib/wordpress/queries";
 
@@ -16,8 +18,16 @@ export default async function StoryPage({ params }: PageProps<"/[slug]">) {
 
   if (!story) notFound();
 
+  const article = prepareArticleContent(story.content);
+  const related = await getStories({
+    categoryId: story.primaryCategory?.id,
+    exclude: [story.id],
+    perPage: 3,
+  });
+
   const shareUrl = encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL ?? "https://promogamesbr.com"}${story.href}`);
   const shareTitle = encodeURIComponent(story.title);
+  const wasUpdated = new Date(story.modifiedAt).getTime() - new Date(story.publishedAt).getTime() > 86_400_000;
 
   return (
     <article className="pb-20">
@@ -37,8 +47,9 @@ export default async function StoryPage({ params }: PageProps<"/[slug]">) {
             {story.deck ?? story.excerpt}
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-line pt-6 text-sm">
-            <span className="font-extrabold">Por {story.author.name}</span>
+            <Link href={`/autor/${story.author.slug}/`} className="font-extrabold transition hover:text-brand">Por {story.author.name}</Link>
             <span className="text-muted">{formatDate(story.publishedAt, true)}</span>
+            {wasUpdated ? <span className="text-muted">Atualizado em {formatDate(story.modifiedAt, true)}</span> : null}
             <span className="text-muted">{story.readingMinutes} min de leitura</span>
           </div>
         </div>
@@ -65,24 +76,37 @@ export default async function StoryPage({ params }: PageProps<"/[slug]">) {
               <a href={`https://wa.me/?text=${shareTitle}%20${shareUrl}`} target="_blank" rel="noreferrer" className="grid size-11 place-items-center rounded-full border border-line bg-surface text-xs font-black transition hover:border-brand hover:text-brand" aria-label="Compartilhar no WhatsApp">WA</a>
             </aside>
 
-            <ArticleBody html={story.content} />
+            <ArticleBody html={article.html} />
 
-            <aside className="h-fit rounded-card border border-line bg-surface p-5 lg:sticky lg:top-6">
-              <p className="text-[0.66rem] font-black uppercase tracking-[0.1em] text-brand">Sobre o autor</p>
-              <div className="mt-4 flex items-center gap-3">
-                {story.author.avatarUrl ? (
-                  <Image src={story.author.avatarUrl} width={48} height={48} alt="" className="rounded-full" />
-                ) : (
-                  <span className="grid size-12 place-items-center rounded-full bg-brand font-display font-black text-white">PG</span>
-                )}
-                <div>
-                  <p className="font-display font-extrabold">{story.author.name}</p>
-                  <p className="text-xs text-muted">Redação PromoGames</p>
+            <div className="h-fit space-y-5 lg:sticky lg:top-6">
+              <aside className="rounded-card border border-line bg-surface p-5">
+                <p className="text-[0.66rem] font-black uppercase tracking-[0.1em] text-brand">Sobre o autor</p>
+                <div className="mt-4 flex items-center gap-3">
+                  {story.author.avatarUrl ? (
+                    <Image src={story.author.avatarUrl} width={48} height={48} alt="" className="rounded-full" />
+                  ) : (
+                    <span className="grid size-12 place-items-center rounded-full bg-brand font-display font-black text-white">PG</span>
+                  )}
+                  <div>
+                    <Link href={`/autor/${story.author.slug}/`} className="font-display font-extrabold transition hover:text-brand">{story.author.name}</Link>
+                    <p className="text-xs text-muted">Redação PromoGames</p>
+                  </div>
                 </div>
-              </div>
-              {story.author.description ? <p className="mt-4 text-sm leading-6 text-muted">{story.author.description}</p> : null}
-            </aside>
+                {story.author.description ? <p className="mt-4 text-sm leading-6 text-muted">{story.author.description}</p> : null}
+              </aside>
+              <ArticleToc headings={article.headings} />
+            </div>
           </div>
+
+          {related.items.length ? (
+            <section className="border-t border-line py-12 lg:py-16">
+              <p className="eyebrow">Continue jogando</p>
+              <h2 className="font-display text-3xl font-extrabold tracking-[-0.045em] sm:text-4xl">Leia também</h2>
+              <div className="mt-7 grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
+                {related.items.map((item) => <StoryCard key={item.id} story={item} />)}
+              </div>
+            </section>
+          ) : null}
         </div>
       </div>
     </article>

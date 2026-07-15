@@ -1,8 +1,13 @@
-import "server-only";
-
 import sanitizeHtml from "sanitize-html";
+import { plainText, slugifyHeading } from "../wordpress/text";
 
-export function sanitizeArticleHtml(html: string) {
+export type ArticleHeading = {
+  id: string;
+  label: string;
+  level: 2 | 3;
+};
+
+function sanitize(html: string) {
   return sanitizeHtml(html, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat([
       "figure",
@@ -41,4 +46,32 @@ export function sanitizeArticleHtml(html: string) {
       }),
     },
   });
+}
+
+export function prepareArticleContent(html: string) {
+  const usedIds = new Map<string, number>();
+  const headings: ArticleHeading[] = [];
+  const safeHtml = sanitize(html).replace(
+    /<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi,
+    (match, rawLevel: string, rawAttributes: string, innerHtml: string) => {
+      const label = plainText(innerHtml);
+      if (!label) return match;
+
+      const baseId = slugifyHeading(label);
+      const occurrence = usedIds.get(baseId) ?? 0;
+      usedIds.set(baseId, occurrence + 1);
+      const id = occurrence ? `${baseId}-${occurrence + 1}` : baseId;
+      const level = Number(rawLevel) as 2 | 3;
+      headings.push({ id, label, level });
+
+      const attributes = rawAttributes.replace(/\s+id=("[^"]*"|'[^']*')/gi, "");
+      return `<h${level}${attributes} id="${id}">${innerHtml}</h${level}>`;
+    },
+  );
+
+  return { html: safeHtml, headings };
+}
+
+export function sanitizeArticleHtml(html: string) {
+  return prepareArticleContent(html).html;
 }

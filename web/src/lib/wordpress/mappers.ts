@@ -1,5 +1,5 @@
 import type { RawAuthor, RawCategory, RawMedia, RawPost, RawTerm } from "./raw-types";
-import { decodeHtmlEntities, plainText, readingTime } from "./text";
+import { decodeHtmlEntities, plainText, readingTime, truncateText } from "./text";
 import type { Story, WordPressAuthor, WordPressImage, WordPressTerm } from "./types";
 
 const fallbackAuthor: WordPressAuthor = {
@@ -77,7 +77,7 @@ export function mapPost(post: RawPost): Story {
     href: `/${post.slug}/`,
     sourceUrl: post.link,
     title: plainText(post.title.rendered),
-    excerpt: plainText(post.excerpt.rendered),
+    excerpt: truncateText(post.excerpt.rendered),
     content,
     deck: plainText(post.meta?.promogames_deck ?? "") || undefined,
     publishedAt: post.date,

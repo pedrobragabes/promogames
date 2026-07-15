@@ -8,6 +8,12 @@ import { navigationLinks } from "./navigation-data";
 
 export function MobileHeader() {
   const [open, setOpen] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setReady(true), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -33,8 +39,9 @@ export function MobileHeader() {
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
             aria-controls="mobile-navigation"
+            disabled={!ready}
             onClick={() => setOpen((value) => !value)}
-            className="grid size-11 place-items-center rounded-full hover:bg-white"
+            className="grid size-11 place-items-center rounded-full hover:bg-white disabled:cursor-wait"
           >
             <Icon name={open ? "close" : "menu"} />
           </button>
