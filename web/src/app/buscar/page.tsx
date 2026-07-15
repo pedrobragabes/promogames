@@ -1,6 +1,18 @@
+import type { Metadata } from "next";
 import { ArchiveHeader, StoryArchive } from "@/components/editorial/archive";
 import { parsePage } from "@/lib/pagination";
 import { getStories } from "@/lib/wordpress/queries";
+
+export async function generateMetadata({ searchParams }: PageProps<"/buscar">): Promise<Metadata> {
+  const query = await searchParams;
+  const search = typeof query.q === "string" ? query.q.trim().slice(0, 100) : "";
+  return {
+    title: search ? `Busca: ${search}` : "Busca",
+    description: "Encontre notícias, análises, guias e promoções no PromoGames.",
+    alternates: { canonical: "/buscar/" },
+    robots: { index: false, follow: true },
+  };
+}
 
 export default async function SearchPage({ searchParams }: PageProps<"/buscar">) {
   const query = await searchParams;

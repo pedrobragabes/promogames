@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArchiveHeader, StoryArchive } from "@/components/editorial/archive";
 import { parsePage } from "@/lib/pagination";
@@ -5,6 +6,19 @@ import { getCategories, getCategoryBySlug, getStories } from "@/lib/wordpress/qu
 
 export async function generateStaticParams() {
   return (await getCategories()).map((category) => ({ slug: category.slug }));
+}
+
+export async function generateMetadata({ params, searchParams }: PageProps<"/categoria/[slug]">): Promise<Metadata> {
+  const [{ slug }, query] = await Promise.all([params, searchParams]);
+  const category = await getCategoryBySlug(slug);
+  if (!category) return {};
+  const page = parsePage(query.page);
+  const canonical = `/categoria/${slug}/${page > 1 ? `?page=${page}` : ""}`;
+  return {
+    title: `${category.name}${page > 1 ? ` — Página ${page}` : ""}`,
+    description: category.description || `Notícias, análises e novidades de ${category.name} no PromoGames.`,
+    alternates: { canonical },
+  };
 }
 
 export default async function CategoryPage({ params, searchParams }: PageProps<"/categoria/[slug]">) {
