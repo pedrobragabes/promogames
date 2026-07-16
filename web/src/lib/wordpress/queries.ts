@@ -83,6 +83,56 @@ export const getStoryBySlug = cache(async (slug: string): Promise<Story | null> 
   }
 });
 
+function getPreviewAuthorization() {
+  const username = process.env.WORDPRESS_USERNAME;
+  const password = process.env.WORDPRESS_APPLICATION_PASSWORD;
+  if (!username || !password) return null;
+  return `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
+}
+
+export async function getPreviewStoryById(id: number): Promise<Story | null> {
+  const authorization = getPreviewAuthorization();
+  if (!authorization || !Number.isInteger(id) || id < 1) return null;
+
+  try {
+    const response = await wordPressRequest<RawPost>(
+      `/posts/${id}`,
+      { context: "edit", _embed: EMBED, _fields: DETAIL_FIELDS },
+      [],
+      { cache: "no-store", headers: { Authorization: authorization } },
+    );
+    return mapPost(response.data);
+  } catch (error) {
+    console.error(`[wordpress] Falha ao carregar preview ${id}`, error);
+    return null;
+  }
+}
+
+type SitemapStory = Pick<Story, "id" | "slug" | "href" | "modifiedAt" | "image">;
+
+export const getSitemapStories = cache(async (): Promise<SitemapStory[]> => {
+  const stories: SitemapStory[] = [];
+  let page = 1;
+  let totalPages = 1;
+
+  try {
+    do {
+      const response = await wordPressRequest<RawPost[]>(
+        "/posts",
+        { page, per_page: 100, _embed: "wp:featuredmedia", _fields: LIST_FIELDS },
+        ["wordpress", "stories"],
+      );
+      stories.push(...response.data.map(mapPost));
+      totalPages = Math.min(response.totalPages, 20);
+      page += 1;
+    } while (page <= totalPages);
+    return stories;
+  } catch (error) {
+    console.error("[wordpress] Falha ao montar sitemap", error);
+    return stories.length ? stories : fallbackStories;
+  }
+});
+
 export const getCategories = cache(async (): Promise<WordPressTerm[]> => {
   try {
     const response = await wordPressRequest<RawCategory[]>(

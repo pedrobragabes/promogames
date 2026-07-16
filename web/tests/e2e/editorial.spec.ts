@@ -33,6 +33,8 @@ test("matéria real renderiza Gutenberg e autoria", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Catálogo PlayStation Plus");
   await expect(page.locator(".article-body")).toContainText("Avatar");
   await expect(page.getByText("Sobre o autor")).toBeVisible();
+  expect(await page.locator('script[type="application/ld+json"]').textContent()).toContain("NewsArticle");
+  await expect(page.getByLabel("Publicidade")).toHaveCSS("min-height", "180px");
   const violations = await new AxeBuilder({ page }).analyze();
   expect(violations.violations.filter((item) => item.impact === "critical")).toEqual([]);
 });
@@ -44,4 +46,25 @@ test("menu mobile abre e fecha pelo teclado", async ({ page, isMobile }) => {
   await expect(page.getByRole("navigation", { name: "Navegação principal" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("navigation", { name: "Navegação principal" })).toBeHidden();
+});
+
+test("endpoints editoriais rejeitam chamadas sem segredo", async ({ request }) => {
+  const draft = await request.get("/api/draft/?id=1&secret=invalido");
+  expect(draft.status()).toBe(401);
+  const revalidation = await request.post("/api/revalidate/", { data: { slug: "teste" } });
+  expect(revalidation.status()).toBe(401);
+  const authorized = await request.post("/api/revalidate/", {
+    headers: { "x-promogames-secret": "e2e-revalidate-secret" },
+    data: { slug: "teste", tags: ["stories", "tag-nao-permitida"], paths: ["/categoria/noticias/"] },
+  });
+  expect(authorized.status()).toBe(200);
+  expect(await authorized.json()).toMatchObject({ revalidated: true });
+});
+
+test("SEO técnico publica sitemap e regras de crawler", async ({ request }) => {
+  const sitemap = await request.get("/sitemap.xml");
+  expect(sitemap.status()).toBe(200);
+  expect(await sitemap.text()).toContain(storySlug);
+  const robots = await request.get("/robots.txt");
+  expect(await robots.text()).toContain("Disallow: /preview/");
 });

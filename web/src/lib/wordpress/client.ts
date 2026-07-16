@@ -43,16 +43,16 @@ export async function wordPressRequest<T>(
   init?: RequestInit,
 ): Promise<WordPressResponse<T>> {
   const url = createUrl(path, query);
+  const cacheOptions = init?.cache === "no-store"
+    ? {}
+    : { next: { revalidate: 300, tags } };
   const response = await fetch(url, {
     ...init,
     headers: {
       Accept: "application/json",
       ...init?.headers,
     },
-    next: {
-      revalidate: 300,
-      tags,
-    },
+    ...cacheOptions,
   });
 
   if (!response.ok) {

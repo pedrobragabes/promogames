@@ -15,9 +15,10 @@ export default defineConfig({
     { name: "mobile-chromium", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: "npm run dev -- --port 3100",
+    command: "npm run build && npm run start -- --port 3100",
     url: "http://localhost:3100",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    env: { DRAFT_MODE_SECRET: "e2e-draft-secret", REVALIDATE_SECRET: "e2e-revalidate-secret" },
+    reuseExistingServer: false,
+    timeout: 180_000,
   },
 });

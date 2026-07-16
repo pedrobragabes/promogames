@@ -52,7 +52,8 @@ A interface nunca consome o formato REST cru diretamente. `src/lib/wordpress/map
 - Tags de cache: `wordpress`, `stories`, `story:{slug}`, `categories` e `authors`.
 - A home possui uma coleção mínima de fallback para não ficar vazia se a origem falhar.
 - Arquivos específicos retornam estados vazios controlados quando o WordPress estiver indisponível.
-- A Fase 3 adiciona webhook assinado para revalidação sob demanda.
+- O PromoGames Core dispara webhook assinado para `/api/revalidate/`; o Next invalida tags e rotas imediatamente.
+- A revalidação temporal de cinco minutos permanece como fallback se o webhook falhar.
 
 ## Conteúdo Gutenberg
 
@@ -64,7 +65,7 @@ O corpo é recebido em `content.rendered`. Na apresentação:
 - scripts não são executados pelo front;
 - blocos especiais do PromoGames serão registrados pelo plugin PromoGames Core.
 
-## Extensão prevista pelo PromoGames Core
+## Extensão do PromoGames Core
 
 Os seguintes metacampos serão expostos no REST:
 
@@ -73,7 +74,6 @@ Os seguintes metacampos serão expostos no REST:
 - `promogames_platforms`;
 - `promogames_review_score`;
 - `promogames_featured`;
-- `promogames_featured_order`;
-- `promogames_featured_until`.
+- `promogames_featured_order`.
 
-Todos são opcionais; o front continua funcionando antes da instalação do plugin.
+Todos são opcionais; o front continua funcionando antes da instalação do plugin. A curadoria fica disponível em `/wp-json/promogames/v1/home` e o código instalável está em `wordpress/promogames-core/`.

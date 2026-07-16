@@ -123,6 +123,34 @@ img {
   display: none;
 }
 
+.ad-slot {
+  display: grid;
+  width: 100%;
+  place-items: center;
+  overflow: hidden;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-card);
+  background: rgb(255 255 255 / 55%);
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ad-slot--leaderboard {
+  min-height: 90px;
+}
+
+.ad-slot--billboard {
+  min-height: 180px;
+  margin-bottom: 3rem;
+}
+
+.ad-slot--rectangle {
+  min-height: 250px;
+}
+
 .article-body {
   color: #25202a;
   font-size: clamp(1.03rem, 0.98rem + 0.22vw, 1.17rem);

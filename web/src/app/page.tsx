@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { HeroDeck } from "@/components/editorial/hero-deck";
 import { Radar } from "@/components/editorial/radar";
 import { SectionHeader } from "@/components/editorial/section-header";
 import { StoryCard, StoryListItem } from "@/components/editorial/story-card";
+import { AdSlot } from "@/components/platform/ad-slot";
 import { getCategories, getStories } from "@/lib/wordpress/queries";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default async function Home() {
   const [{ items: stories }, categories] = await Promise.all([
@@ -37,6 +43,8 @@ export default async function Home() {
           <HeroDeck stories={heroStories} />
         </div>
       </section>
+
+      <div className="px-4 pt-8 sm:px-6 lg:px-10"><div className="mx-auto max-w-[1460px]"><AdSlot name="home-top" /></div></div>
 
       <section className="px-4 pt-16 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-[1460px]">
