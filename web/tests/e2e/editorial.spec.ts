@@ -62,6 +62,9 @@ test("endpoints editoriais rejeitam chamadas sem segredo", async ({ request }) =
 });
 
 test("SEO técnico publica sitemap e regras de crawler", async ({ request }) => {
+  const home = await request.get("/");
+  expect(home.headers()["content-security-policy"]).toContain("frame-ancestors 'self'");
+  expect(home.headers()["x-content-type-options"]).toBe("nosniff");
   const sitemap = await request.get("/sitemap.xml");
   expect(sitemap.status()).toBe(200);
   expect(await sitemap.text()).toContain(storySlug);

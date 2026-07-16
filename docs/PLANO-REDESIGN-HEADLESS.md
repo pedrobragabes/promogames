@@ -1,6 +1,6 @@
 # PromoGames — plano de redesign e arquitetura headless
 
-**Status:** proposta para validação
+**Status:** v1 implementada; implantação de produção documentada
 
 **Data:** 15 de julho de 2026
 

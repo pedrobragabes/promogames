@@ -37,5 +37,7 @@ export async function POST(request: Request) {
   }
   for (const path of paths) revalidatePath(path, "page");
 
+  console.info("[promogames] Conteúdo revalidado", { tags: [...allowedTags], paths: [...paths] });
+
   return Response.json({ revalidated: true, tags: [...allowedTags], paths: [...paths], at: new Date().toISOString() });
 }
