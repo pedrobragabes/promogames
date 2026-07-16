@@ -1,6 +1,6 @@
 # QA e checklist de lançamento
 
-**Baseline local:** 15 de julho de 2026  
+**Baseline local:** 15 de julho de 2026<br>
 **Release candidata:** v1.0.0
 
 ## Evidências automatizadas
@@ -17,6 +17,7 @@
 | REST WordPress | 508 posts, 14 categorias e 9 autores auditados |
 | SEO técnico | sitemap, robots e JSON-LD verificados por E2E |
 | Segurança editorial | preview/revalidação sem segredo retornam 401; webhook válido coberto por E2E |
+| GitHub Actions Linux / PHP 8.1 | aprovado na `main`, incluindo `php -l` do PromoGames Core |
 
 O GitHub Actions repete build, testes, auditoria e `php -l` do plugin em cada push/PR.
 
