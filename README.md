@@ -63,6 +63,7 @@ Use [web/.env.example](web/.env.example) como referência e nunca versione valor
 - [Plano de produto e arquitetura](docs/PLANO-REDESIGN-HEADLESS.md)
 - [Contrato de conteúdo WordPress](docs/CONTRATO-WORDPRESS.md)
 - [Deploy, DNS e rollback](docs/DEPLOY-E-ROLLBACK.md)
+- [Guia seguro de migração headless e ensaio no JoystickNights](docs/GUIA-MIGRACAO-HEADLESS-SEGURO.md)
 - [QA e checklist de lançamento](docs/QA-LANCAMENTO.md)
 - [Instalação do PromoGames Core](wordpress/promogames-core/README.md)
 
