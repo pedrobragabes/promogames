@@ -1,0 +1,61 @@
+# Local WordPress installations and production backups
+/promogamesold/
+/wordpress/wordpress/
+**/wp-config.php
+**/wp-config-*.php
+!**/wp-config-sample.php
+
+# Database dumps and backup archives
+*.sql
+*.sql.gz
+*.dump
+*.bak
+*.backup
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.wpress
+
+# Environment files and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+secrets*.json
+service-account*.json
+
+# JavaScript dependencies and build output
+node_modules/
+.next/
+out/
+build/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+next-env.d.ts
+
+# WordPress-generated content if a local instance is added elsewhere
+**/wp-content/cache/
+**/wp-content/upgrade/
+**/wp-content/backups*/
+**/wp-content/uploads/
+**/wp-content/debug.log
+
+# Logs, temporary files, and editor metadata
+*.log
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
