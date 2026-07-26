@@ -5,7 +5,7 @@ export function Radar({ stories }: { stories: Story[] }) {
   return (
     <div className="border-b border-line bg-surface px-4 sm:px-6 lg:px-10">
       <div className="scrollbar-none mx-auto flex min-h-12 max-w-[1460px] items-center gap-4 overflow-x-auto text-xs">
-        <span className="sticky left-0 shrink-0 rounded-full bg-ink px-3 py-1.5 font-black uppercase tracking-[0.11em] text-white">
+        <span className="sticky left-0 shrink-0 rounded-full bg-brand px-3 py-1.5 font-black uppercase tracking-[0.11em] text-white">
           Agora
         </span>
         <div className="flex min-w-max items-center gap-5 pr-4">

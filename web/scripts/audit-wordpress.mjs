@@ -1,7 +1,12 @@
-const apiBase = (
-  process.env.WORDPRESS_API_URL ??
-  "https://promogamesbr.com/wp-json/wp/v2"
-).replace(/\/$/, "");
+import nextEnv from "@next/env";
+
+const { loadEnvConfig } = nextEnv;
+loadEnvConfig(process.cwd());
+
+const defaultApiBase = process.env.NEXT_PUBLIC_SITE_PROFILE === "joysticknights"
+  ? "https://joysticknights.com.br/wp-json/wp/v2"
+  : "https://promogamesbr.com/wp-json/wp/v2";
+const apiBase = (process.env.WORDPRESS_API_URL ?? defaultApiBase).replace(/\/$/, "");
 
 async function request(path) {
   const response = await fetch(`${apiBase}${path}`, {

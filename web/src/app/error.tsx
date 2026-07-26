@@ -13,7 +13,7 @@ export default function ErrorPage({ error, unstable_retry }: { error: Error & { 
         <p className="eyebrow">Respawn necessário</p>
         <h1 className="font-display text-4xl font-extrabold tracking-[-0.05em]">Algo interrompeu esta fase.</h1>
         <p className="mt-4 leading-7 text-muted">A conexão com a redação pode ter oscilado. Tente carregar o conteúdo novamente.</p>
-        <button type="button" onClick={() => unstable_retry()} className="mt-7 rounded-full bg-ink px-6 py-3 text-sm font-black text-white transition hover:bg-brand">Tentar novamente</button>
+        <button type="button" onClick={() => unstable_retry()} className="mt-7 rounded-full bg-brand px-6 py-3 text-sm font-black text-white transition hover:bg-brand-strong">Tentar novamente</button>
       </div>
     </main>
   );

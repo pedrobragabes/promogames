@@ -4,7 +4,8 @@ import { Radar } from "@/components/editorial/radar";
 import { SectionHeader } from "@/components/editorial/section-header";
 import { StoryCard, StoryListItem } from "@/components/editorial/story-card";
 import { AdSlot } from "@/components/platform/ad-slot";
-import { getCategories, getStories } from "@/lib/wordpress/queries";
+import { getCategoryHref, siteConfig } from "@/lib/site-config";
+import { getCategories, getHomepageStories } from "@/lib/wordpress/queries";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -12,14 +13,14 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const [{ items: stories }, categories] = await Promise.all([
-    getStories({ perPage: 18 }),
+    getHomepageStories(18),
     getCategories(),
   ]);
 
   const heroStories = stories.slice(0, 4);
   const highlights = stories.slice(4, 12);
   const latest = stories.slice(12);
-  const channels = ["playstation", "xbox", "nintendo", "pc"]
+  const channels = siteConfig.featuredChannelSlugs
     .map((slug) => categories.find((category) => category.slug === slug))
     .filter((category) => category !== undefined);
 
@@ -44,14 +45,14 @@ export default async function Home() {
         </div>
       </section>
 
-      <div className="px-4 pt-8 sm:px-6 lg:px-10"><div className="mx-auto max-w-[1460px]"><AdSlot name="home-top" /></div></div>
+      <div className="px-4 pt-8 sm:px-6 lg:px-10"><div className="mx-auto max-w-[1460px]"><AdSlot name="home-top" slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME_TOP} /></div></div>
 
       <section className="px-4 pt-16 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-[1460px]">
           <SectionHeader
             eyebrow="Em alta"
             title="Mais destaques"
-            href="/categoria/noticias/"
+            href={getCategoryHref("noticias")}
             linkLabel="Todas as notícias"
           />
           <div className="grid gap-x-5 gap-y-9 sm:grid-cols-2 xl:grid-cols-4">
@@ -62,15 +63,15 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="mt-16 border-y border-line bg-ink px-4 py-12 text-white sm:px-6 lg:px-10 lg:py-16">
+      <section className="mt-16 border-y border-line bg-[#151219] px-4 py-12 text-white sm:px-6 lg:px-10 lg:py-16">
         <div className="mx-auto max-w-[1460px]">
           <p className="eyebrow text-lilac">Escolha seu universo</p>
           <div className="mt-2 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {channels.map((channel, index) => (
               <a
                 key={channel.id}
-                href={`/categoria/${channel.slug}/`}
-                className="group relative min-h-44 overflow-hidden rounded-card border border-white/15 p-6 transition hover:-translate-y-1 hover:border-lilac focus-visible:outline-lilac"
+                href={getCategoryHref(channel.slug)}
+                className="group relative min-h-44 overflow-hidden rounded-card border border-white/15 p-6 text-white transition hover:-translate-y-1 hover:border-lilac focus-visible:outline-lilac"
               >
                 <div
                   aria-hidden
@@ -111,7 +112,7 @@ export default async function Home() {
         </section>
       ) : null}
 
-      <section id="newsletter" className="px-4 pt-16 sm:px-6 lg:px-10">
+      {process.env.NEXT_PUBLIC_NEWSLETTER_ACTION ? <section id="newsletter" className="px-4 pt-16 sm:px-6 lg:px-10">
         <div className="mx-auto grid max-w-[1460px] overflow-hidden rounded-card bg-brand text-white lg:grid-cols-[1.1fr_0.9fr]">
           <div className="p-7 sm:p-10 lg:p-14">
             <p className="eyebrow text-white/70">Checkpoint semanal</p>
@@ -120,23 +121,26 @@ export default async function Home() {
             </h2>
           </div>
           <div className="flex items-center bg-white/10 p-7 sm:p-10 lg:p-14">
-            <form className="flex w-full flex-col gap-3 sm:flex-row" action="#newsletter">
+            <form className="flex w-full flex-col gap-3 sm:flex-row" action={process.env.NEXT_PUBLIC_NEWSLETTER_ACTION} method="post">
               <label className="sr-only" htmlFor="newsletter-email">
                 Seu melhor e-mail
               </label>
               <input
                 id="newsletter-email"
                 type="email"
+                name="email"
+                required
+                autoComplete="email"
                 placeholder="voce@email.com"
-                className="min-h-12 flex-1 rounded-full border border-white/30 bg-white px-5 text-ink outline-none placeholder:text-muted focus:border-ink"
+                className="min-h-12 flex-1 rounded-full border border-white/30 bg-white px-5 text-[#151219] outline-none placeholder:text-[#6c6671] focus:border-[#151219]"
               />
-              <button className="min-h-12 rounded-full bg-ink px-6 text-sm font-extrabold text-white transition hover:bg-black">
+              <button className="min-h-12 rounded-full bg-[#151219] px-6 text-sm font-extrabold text-white transition hover:bg-brand-strong">
                 Quero receber
               </button>
             </form>
           </div>
         </div>
-      </section>
+      </section> : null}
     </div>
   );
 }

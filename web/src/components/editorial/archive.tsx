@@ -49,7 +49,7 @@ export function StoryArchive({ result, emptyMessage, query }: { result: Paginate
         ) : (
           <div className="rounded-card border border-dashed border-line bg-surface px-6 py-16 text-center">
             <p className="font-display text-2xl font-extrabold">{emptyMessage}</p>
-            <Link href="/" className="mt-4 inline-flex rounded-full bg-ink px-5 py-3 text-sm font-black text-white transition hover:bg-brand">Voltar para o início</Link>
+            <Link href="/" className="mt-4 inline-flex rounded-full bg-brand px-5 py-3 text-sm font-black text-white transition hover:bg-brand-strong">Voltar para o início</Link>
           </div>
         )}
         <Pagination page={result.page} totalPages={result.totalPages} query={query} />
@@ -80,7 +80,7 @@ export function Pagination({ page, totalPages, query }: { page: number; totalPag
 
 function PageLink({ page, label, current = false, disabled = false, query }: { page: number; label: string; current?: boolean; disabled?: boolean; query?: Record<string, string> }) {
   const className = `grid min-h-11 min-w-11 place-items-center rounded-full border px-4 text-sm font-black transition ${
-    current ? "border-ink bg-ink text-white" : disabled ? "pointer-events-none border-line text-muted opacity-45" : "border-line bg-surface hover:border-brand hover:text-brand"
+    current ? "border-brand bg-brand text-white" : disabled ? "pointer-events-none border-line text-muted opacity-45" : "border-line bg-surface hover:border-brand hover:text-brand"
   }`;
 
   if (disabled) return <span className={className} aria-disabled>{label}</span>;
