@@ -1,9 +1,13 @@
 import type { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/site-config";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://promogamesbr.com").replace(/\/$/, "");
+  const siteUrl = getSiteUrl();
+  const indexingEnabled = process.env.NEXT_PUBLIC_INDEXING_ENABLED !== "false";
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/api/", "/preview/", "/buscar/"] },
+    rules: indexingEnabled
+      ? { userAgent: "*", allow: "/", disallow: ["/api/", "/preview/", "/buscar/"] }
+      : { userAgent: "*", disallow: "/" },
     sitemap: `${siteUrl}/sitemap.xml`,
     host: siteUrl,
   };

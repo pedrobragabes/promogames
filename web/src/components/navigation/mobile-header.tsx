@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/icons";
+import { siteConfig } from "@/lib/site-config";
 import { Brand } from "./brand";
 import { navigationLinks } from "./navigation-data";
+import { ThemeToggle } from "./theme-toggle";
 
 export function MobileHeader() {
   const [open, setOpen] = useState(false);
@@ -31,7 +33,8 @@ export function MobileHeader() {
       <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-line bg-canvas/95 px-4 backdrop-blur lg:hidden">
         <Brand />
         <div className="flex items-center gap-1">
-          <Link aria-label="Buscar" href="/buscar/" className="grid size-11 place-items-center rounded-full hover:bg-white">
+          <ThemeToggle />
+          <Link aria-label="Buscar" href="/buscar/" className="grid size-11 place-items-center rounded-full hover:bg-surface">
             <Icon name="search" />
           </Link>
           <button
@@ -41,14 +44,14 @@ export function MobileHeader() {
             aria-controls="mobile-navigation"
             disabled={!ready}
             onClick={() => setOpen((value) => !value)}
-            className="grid size-11 place-items-center rounded-full hover:bg-white disabled:cursor-wait"
+            className="grid size-11 place-items-center rounded-full hover:bg-surface disabled:cursor-wait"
           >
             <Icon name={open ? "close" : "menu"} />
           </button>
         </div>
       </header>
       {open ? (
-        <div className="fixed inset-0 z-30 bg-ink/40 backdrop-blur-sm lg:hidden" onClick={() => setOpen(false)}>
+        <div className="fixed inset-0 z-30 bg-[#151219]/55 backdrop-blur-sm lg:hidden" onClick={() => setOpen(false)}>
           <nav
             id="mobile-navigation"
             aria-label="Navegação principal"
@@ -69,7 +72,7 @@ export function MobileHeader() {
               ))}
             </div>
             <p className="mt-auto border-t border-line pt-6 text-sm leading-6 text-muted">
-              Notícias, análises e promoções para quem vive videogames.
+              {siteConfig.shortDescription}
             </p>
           </nav>
         </div>

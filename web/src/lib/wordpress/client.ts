@@ -1,6 +1,5 @@
 import "server-only";
-
-const DEFAULT_API_URL = "https://promogamesbr.com/wp-json/wp/v2";
+import { siteConfig } from "@/lib/site-config";
 
 export class WordPressApiError extends Error {
   constructor(
@@ -22,7 +21,19 @@ export type WordPressResponse<T> = {
 type QueryValue = string | number | boolean | Array<string | number> | undefined;
 
 export function getWordPressApiUrl() {
-  return (process.env.WORDPRESS_API_URL ?? DEFAULT_API_URL).replace(/\/$/, "");
+  return (process.env.WORDPRESS_API_URL ?? siteConfig.defaultWordPressApiUrl).replace(/\/$/, "");
+}
+
+export function getWordPressRestUrl(path: string) {
+  const url = new URL(getWordPressApiUrl());
+  const normalizedPath = path.replace(/^\/+|\/+$/g, "");
+  if (!/\/wp\/v2\/?$/.test(url.pathname)) {
+    throw new WordPressApiError("WORDPRESS_API_URL precisa terminar em /wp-json/wp/v2.");
+  }
+  url.pathname = url.pathname.replace(/\/wp\/v2\/?$/, `/${normalizedPath}`);
+  url.search = "";
+  url.hash = "";
+  return url;
 }
 
 function createUrl(path: string, query: Record<string, QueryValue>) {

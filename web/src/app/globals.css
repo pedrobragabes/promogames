@@ -1,17 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --canvas: #f4f2f6;
-  --surface: #ffffff;
-  --ink: #151219;
-  --muted: #6c6671;
-  --line: #ddd9e1;
+  color-scheme: dark;
+  --canvas: #0c0911;
+  --surface: #15111d;
+  --ink: #f7f2fb;
+  --muted: #aaa1b2;
+  --line: #30283a;
   --brand: #6426d9;
   --brand-strong: #4b16b4;
   --accent: #f02f7d;
   --lilac: #cbb7ff;
   --deals: #ffb000;
   --radius-card: 14px;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #f4f2f6;
+  --surface: #ffffff;
+  --ink: #151219;
+  --muted: #6c6671;
+  --line: #ddd9e1;
 }
 
 @theme inline {
@@ -44,11 +54,25 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at 82% -10%, rgb(100 38 217 / 9%), transparent 28rem),
+    radial-gradient(circle at 82% -10%, rgb(100 38 217 / 18%), transparent 30rem),
     var(--canvas);
   color: var(--ink);
   font-family: var(--font-body), sans-serif;
   text-rendering: optimizeLegibility;
+}
+
+:root[data-theme="light"] body {
+  background:
+    radial-gradient(circle at 82% -10%, rgb(100 38 217 / 9%), transparent 28rem),
+    var(--canvas);
+}
+
+:root.theme-transitioning,
+:root.theme-transitioning body,
+:root.theme-transitioning body * {
+  transition-property: background-color, border-color, color, box-shadow, fill, stroke;
+  transition-duration: 360ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 button,
@@ -68,7 +92,7 @@ img {
 
 ::selection {
   background: var(--lilac);
-  color: var(--ink);
+  color: #151219;
 }
 
 :focus-visible {
@@ -78,6 +102,10 @@ img {
 
 .font-display {
   font-family: var(--font-display-family), sans-serif;
+}
+
+.brand-mark {
+  box-shadow: 4px 4px 0 var(--accent);
 }
 
 .eyebrow {
@@ -96,7 +124,7 @@ img {
   top: 1rem;
   translate: 0 -180%;
   border-radius: 999px;
-  background: var(--ink);
+  background: var(--brand-strong);
   padding: 0.75rem 1rem;
   color: white;
   font-weight: 800;
@@ -130,7 +158,7 @@ img {
   overflow: hidden;
   border: 1px dashed var(--line);
   border-radius: var(--radius-card);
-  background: rgb(255 255 255 / 55%);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
   color: var(--muted);
   font-size: 0.62rem;
   font-weight: 800;
@@ -152,7 +180,7 @@ img {
 }
 
 .article-body {
-  color: #25202a;
+  color: var(--ink);
   font-size: clamp(1.03rem, 0.98rem + 0.22vw, 1.17rem);
   line-height: 1.85;
 }
@@ -202,7 +230,7 @@ img {
 .article-body blockquote {
   border-left: 4px solid var(--accent);
   padding: 0.35rem 0 0.35rem 1.5rem;
-  color: #49404e;
+  color: var(--muted);
   font-family: var(--font-display), sans-serif;
   font-size: 1.25em;
   font-weight: 650;

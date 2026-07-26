@@ -3,10 +3,18 @@ type RawRendered = {
   protected?: boolean;
 };
 
+export type RawSeo = {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  social_image?: string;
+};
+
 export type RawAuthor = {
   id: number;
   name: string;
   slug: string;
+  link?: string;
   description?: string;
   avatar_urls?: Record<string, string>;
 };
@@ -15,7 +23,8 @@ export type RawTerm = {
   id: number;
   name: string;
   slug: string;
-  taxonomy: string;
+  link?: string;
+  taxonomy?: string;
   parent?: number;
   count?: number;
   description?: string;
@@ -58,9 +67,11 @@ export type RawPost = {
   content?: RawRendered;
   author: number;
   featured_media: number;
+  comment_status: "open" | "closed";
   categories: number[];
   tags: number[];
   meta?: RawPostMeta;
+  promogames_seo?: RawSeo;
   _embedded?: {
     author?: RawAuthor[];
     "wp:featuredmedia"?: RawMedia[];
@@ -68,6 +79,35 @@ export type RawPost = {
   };
 };
 
+export type RawComment = {
+  id: number;
+  post: number;
+  parent: number;
+  author_name: string;
+  date: string;
+  content: RawRendered;
+  status: "approved" | "hold" | "spam" | "trash" | string;
+  type: "comment" | string;
+};
+
+export type RawPage = {
+  id: number;
+  slug: string;
+  link: string;
+  date: string;
+  modified: string;
+  title: RawRendered;
+  excerpt?: RawRendered;
+  content?: RawRendered;
+  parent: number;
+  menu_order: number;
+  promogames_seo?: RawSeo;
+};
+
 export type RawCategory = RawTerm & {
   taxonomy?: "category";
+};
+
+export type RawTag = RawTerm & {
+  taxonomy?: "post_tag";
 };

@@ -1,5 +1,6 @@
 # Local WordPress installations and production backups
 /promogamesold/
+/arquivoswordpress/
 /wordpress/wordpress/
 **/wp-config.php
 **/wp-config-*.php

@@ -10,7 +10,7 @@ export function HeroDeck({ stories }: { stories: Story[] }) {
         <Link
           key={story.id}
           href={story.href}
-          className="story-link group relative min-h-[430px] min-w-[78vw] snap-center overflow-hidden rounded-card bg-ink text-white sm:min-w-[45vw] lg:min-w-0"
+          className="story-link group relative min-h-[430px] min-w-[78vw] snap-center overflow-hidden rounded-card bg-[#151219] text-white sm:min-w-[45vw] lg:min-w-0"
         >
           <StoryImage
             image={story.image}
