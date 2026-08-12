@@ -63,6 +63,7 @@ Use [web/.env.example](web/.env.example) como referência e nunca versione valor
 
 ## Documentação
 
+- [Guia do frontend Next.js](web/README.md)
 - [Tutorial Hostinger do zero: JoystickNights e PromoGames](docs/TUTORIAL-HOSTINGER-DO-ZERO.md)
 - [Plano de produto e arquitetura](docs/PLANO-REDESIGN-HEADLESS.md)
 - [Contrato de conteúdo WordPress](docs/CONTRATO-WORDPRESS.md)
