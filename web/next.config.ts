@@ -45,6 +45,11 @@ const contentSecurityPolicy = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   trailingSlash: true,
+  experimental: {
+    cpus: 2,
+    staticGenerationMaxConcurrency: 1,
+    staticGenerationMinPagesPerWorker: 1000,
+  },
   images: {
     remotePatterns: [
       ...mediaHosts.map((hostname) => ({
