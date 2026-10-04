@@ -63,6 +63,8 @@ Use [web/.env.example](web/.env.example) como referência e nunca versione valor
 
 ## Documentação
 
+- [Manutenção e validação da base em outubro de 2026](docs/MANUTENCAO-2026-10-04.md)
+
 - [Tutorial Hostinger do zero: JoystickNights e PromoGames](docs/TUTORIAL-HOSTINGER-DO-ZERO.md)
 - [Plano de produto e arquitetura](docs/PLANO-REDESIGN-HEADLESS.md)
 - [Contrato de conteúdo WordPress](docs/CONTRATO-WORDPRESS.md)
